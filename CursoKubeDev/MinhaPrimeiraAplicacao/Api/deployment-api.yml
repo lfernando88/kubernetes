@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-python
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: api-python
+  template:
+    metadata:
+      labels:
+        app: api-python
+    spec:
+      initContainers:
+        - name: init-api
+          image: busybox:1.28
+          command: ["sh", "-c", "until nslookup mongo-service; do echo Aguardando banco de dados; sleep 2; done"]
+      containers:
+      - name: my-api
+        image: lfernando88/python:v1.1.10
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: mongo
+  name: mongodbsrv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodbsrv
+  template:
+    metadata:
+      labels:
+        app: mongodbsrv
+    spec:
+      containers:
+      - name: mongodbsrv
+        image: mongo:4.2.8
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+          - mountPath: /data/db
+            name: mongo-data
+        envFrom:
+          - configMapRef:
+              name: configmap-mongodb
+      volumes:
+        - name: mongo-data
+          persistentVolumeClaim:
+            claimName: host-pvc
+

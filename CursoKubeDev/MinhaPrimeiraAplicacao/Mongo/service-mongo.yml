@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodbsrv
+  namespace: mongo
+spec:
+  selector:
+    app: mongodbsrv
+  ports:
+  - port: 27017
+    targetPort: 27017

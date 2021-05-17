@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: application
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: application
+      env: prd
+  template:
+    metadata:
+      labels:
+        app: application
+        env: prd
+    spec:
+      containers:
+      - name: application
+        image: lfernando88/kubernetes:pythonv1
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 90
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-application
+spec:
+  selector:
+    app: application
+    env: prd
+  ports:
+  - port: 5001
+    targetPort: 5000
+  type: NodePort
